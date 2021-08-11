@@ -15,14 +15,14 @@ app.use(express.json());
 const connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: '***************',
+    password: 'Macbook02!!',
     database: 'employee_db'    
 })
 
 connection.connect(err => {
     if (err) throw err; 
     console.log('connected as id' + connection.threadId + '\n');
-    initiateApp ();
+    initiateApp();
 });
 
 const initiateApp = () => {
@@ -388,7 +388,7 @@ const initiateApp = () => {
                 const query = connection.query(
                 `UPDATE employee SET ? WHERE ?`, [
                     {
-                        employee_role_id: answers.employee_role_id;
+                        employee_role_id: answers.employee_role_id
                     },
                     {
                         id: answers.id,
@@ -405,5 +405,9 @@ const initiateApp = () => {
             })
     }
 
+    questions ()
+};
 
-}
+app.listen(PORT, () => {
+    console.log(`Server is now live on ${PORT}`);
+});
