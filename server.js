@@ -226,7 +226,7 @@ const initiateApp = () => {
                     console.log(res.affectedRows);
                 });
             console.log('Role has been added!');
-            displayDepartments(); 
+            displayRoles(); 
             return true;
 
         })        
@@ -308,27 +308,102 @@ const initiateApp = () => {
             },
             {
                 type: 'list',
-                name: 'department_id',
+                name: 'manager_id',
                 message: 'What department is this new role assigned to? ',
-                choices: choicesDepartments,
+                choices: choicesmanager,
             }
         ])
 
         .then(answers => {
             console.log(answers);
-            console.log('\n_______Adding the new Role_______\n');
+            console.log('\n_______Adding the new Employee_______\n');
             const query = connection.query(
-                `INSERT INTO employee_role SET ?`, answers,
+                `INSERT INTO employee SET ?`, answers,
                 function (err, res){
                     if (err) throw err; 
                     console.log(res.affectedRows);
                 });
-            console.log('Role has been added!');
-            displayDepartments(); 
+            console.log('New Employee has been added!');
+            displayEmployees(); 
             return true;
-
         })        
     };
+
+    //Updating an existing employee role 
+    updateRole = () => {
+        let choicesRoles = [];
+        let choicesEmployee = [];
+
+        connection.query(
+            `SELECT id AS value, title AS Role FROM employee_role`,
+            function (err, res) {
+                if (err) throw err; 
+                for (let i=0; e<res.length; i++){
+                    const roles = res[i];
+                    choicesRoles.push({
+                        name: roles.roles, 
+                        value: roles.value
+                    });
+                }
+            }
+        );
+
+        connection.query(
+            `SELECT employee.id AS value, CONCAT(employee.first_name, ' ', employee.last_name) AS Manager FROM employee;`,
+            function (err, res) {
+                if (err) throw err; 
+                for (let i=0; i<res.length; i++){
+                    const roles = res[i];
+                    choicesEmployee.push({
+                        name: roles.Manager, 
+                        value: roles.value
+                    });
+                }
+
+                updateRolePrompt(choicesEmployee, choicesRoles)
+            }
+        );
+    }
+
+    // Questions when Updating employee role 
+    updateRolePrompt = (choicesEmployee, choicesRoles) => {
+        return inquirer.prompt([
+            {
+                type: 'list', 
+                name: 'id', 
+                message: 'Select an Employee to modify Role',
+                choices: choicesEmployee
+            },
+            {
+                type: 'list',
+                name: 'employee_role_id',
+                message: 'What is the New Role that is being assigned to this employee?',
+                choices: choicesRoles
+            }
+        ])
+
+            .then(answers => {
+                console.log(answers);
+                console.log('\n_______Updating the Employee_______\n');
+                const query = connection.query(
+                `UPDATE employee SET ? WHERE ?`, [
+                    {
+                        employee_role_id: answers.employee_role_id;
+                    },
+                    {
+                        id: answers.id,
+                    }
+                ],
+                    function (err, res){
+                        if (err) throw err; 
+                        console.log(res.affectedRows);
+                    });
+
+                console.log('Employee has been updated!');
+                displayEmployees(); 
+                return true;
+            })
+    }
 
 
 }
