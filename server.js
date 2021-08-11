@@ -189,12 +189,146 @@ const initiateApp = () => {
                         return true; 
                     }
                     else{
-                        console.log('Enter ')
+                        console.log('Incorrect format. Enter the Role name correctly.');
+                        return false; 
                     }
                 }
+            },
+            {
+                type: 'input',
+                name: 'title',
+                message: 'What is salary of this new role? ',
+                validate: checkInput => {
+                    if (checkInput){
+                        return true; 
+                    }
+                    else{
+                        console.log('Incorrect format. Enter the salary correctly.');
+                        return false; 
+                    }
+                }
+            },
+            {
+                type: 'list',
+                name: 'department_id',
+                message: 'What department is this new role assigned to? ',
+                choices: choicesDepartments
             }
         ])
+
+        .then(answers => {
+            console.log(answers);
+            console.log('\n_______Adding the new Role_______\n');
+            const query = connection.query(
+                `INSERT INTO employee_role SET ?`, answers,
+                function (err, res){
+                    if (err) throw err; 
+                    console.log(res.affectedRows);
+                });
+            console.log('Role has been added!');
+            displayDepartments(); 
+            return true;
+
+        })        
+    };
+
+    // To Add a new employee 
+    addEmployee = () => {
+        let choicesRoles = []; 
+        let choicesManager = [];
+
+        connection.query(
+            `SELECT id AS value, title AS Role FROM employee_role`,
+            function (err, res) {
+                if (err) throw (err);
+                for (let i=0; i<res.length; i++){
+                    const roles = res[i];
+                    choicesRoles.push({
+                        name: roles.roles, 
+                        value: roles.value
+                    });
+                }
+            }
+        );
+
+        connection.query(
+            `SELECT employee.id AS value, CONCAT(employee.first_name, ' ', employee.last_name) AS Manager FROM employees;`,
+            function (err, res) {
+                if (err) throw err; 
+                for (let i=0; i<res.length; i++){
+                    const roles = res[i];
+                    choicesManager.push({
+                        name: roles.Manager, 
+                        value: roles.value
+                    });
+                }
+
+                employeePrompt(choicesRoles, choicesManager)
+            }
+        );
     }
+
+    //New Employee Questions
+    promptEmployee = (choicesRoles, choicesManager) => {
+
+        return inquirer.prompt([
+            {
+                type: 'input',
+                name: 'title',
+                message: 'What is the first name of the employee? ',
+                validate: checkInput => {
+                    if (checkInput){
+                        return true; 
+                    }
+                    else{
+                        console.log('Incorrect format. Enter the First Name of the employee correctly.');
+                        return false; 
+                    }
+                }
+            },
+            {
+                type: 'input',
+                name: 'title',
+                message: 'What is the last name of the employee? ',
+                validate: checkInput => {
+                    if (checkInput){
+                        return true; 
+                    }
+                    else{
+                        console.log('Incorrect format. Enter the Last Name of the employee correctly.');
+                        return false; 
+                    }
+                }
+            },
+            {
+                type: 'list',
+                name: 'employee_role_id',
+                message: 'What is the role assigned to this new Employee?',
+                choices: choicesRoles
+            },
+            {
+                type: 'list',
+                name: 'department_id',
+                message: 'What department is this new role assigned to? ',
+                choices: choicesDepartments,
+            }
+        ])
+
+        .then(answers => {
+            console.log(answers);
+            console.log('\n_______Adding the new Role_______\n');
+            const query = connection.query(
+                `INSERT INTO employee_role SET ?`, answers,
+                function (err, res){
+                    if (err) throw err; 
+                    console.log(res.affectedRows);
+                });
+            console.log('Role has been added!');
+            displayDepartments(); 
+            return true;
+
+        })        
+    };
 
 
 }
