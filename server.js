@@ -106,11 +106,11 @@ const initiateApp = () => {
     //To display ALL Employees
     displayEmployees = () => {
         const query = connection.query( 
-            `SELECT employee.id, employee.first_name AS "First Name", employee.last_name AS "Last Name", title AS "Job Designation", department_name AS Department, salary AS Salary, FROM employee
-            INNER JOIN employee_role
-                ON employee_role_id = employee_role.id
-            LEFT JOIN employee manager
-                ON manager.id = employee.manager_id`,
+            `SELECT employee.id, employee.first_name AS "First Name", employee.last_name AS "Last Name", title AS "Job Designation", department_name AS Department, salary AS Salary, FROM employee`,
+            // INNER JOIN employee_role
+            //     ON employee_role_id = employee_role.id
+            // LEFT JOIN employee manager
+            //     ON manager.id = employee.manager_id
             function (err, res){
                 if (err) throw err;
                 console.log('\n _______All Employees_______\n');
@@ -150,6 +150,7 @@ const initiateApp = () => {
                         console.log(res.affectedRows);
                     });
                 console.log('Department has been added!');
+                
                 displayDepartments(); 
                 return true;
     
@@ -252,7 +253,7 @@ const initiateApp = () => {
         );
 
         connection.query(
-            `SELECT employee.id AS value, CONCAT(employee.first_name, ' ', employee.last_name) AS Manager FROM employees;`,
+            `SELECT employee.id AS value, CONCAT(employee.first_name, ' ', employee.last_name) AS Manager FROM employee;`,
             function (err, res) {
                 if (err) throw err; 
                 for (let i=0; i<res.length; i++){
@@ -269,7 +270,7 @@ const initiateApp = () => {
     }
 
     //New Employee Questions
-    promptEmployee = (choicesRoles, choicesManager) => {
+    employeePrompt = (choicesRoles, choicesManager) => {
 
         return inquirer.prompt([
             {
@@ -310,7 +311,7 @@ const initiateApp = () => {
                 type: 'list',
                 name: 'manager_id',
                 message: 'What department is this new role assigned to? ',
-                choices: choicesmanager,
+                choices: choicesManager,
             }
         ])
 
