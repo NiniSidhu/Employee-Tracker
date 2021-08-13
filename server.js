@@ -53,7 +53,7 @@ const initiateApp = () => {
                     displayRoles(); 
                 }
                 if (answers.menu === 'View all Employees'){
-                    displayDepartments(); 
+                    displayEmployees(); 
                 }
                 if (answers.menu === 'Add a Department'){
                     addDepartment(); 
@@ -77,9 +77,8 @@ const initiateApp = () => {
 
     //To display ALL Departments
     displayDepartments = () => {
-        const query = connection.query(
-            `SELECT department.id, department_name AS Department FROM department`,
-            function (err, res){
+        const query = `SELECT department.id, department_name AS Department FROM department`;
+            connection.query(query, function (err, res){
                 if (err) throw err;
                 console.log('\n _______All Departments_______\n');
                 console.table(res);
@@ -91,8 +90,7 @@ const initiateApp = () => {
 
     //To display ALL Roles
     displayRoles = () => {
-        const query = connection.query(
-            `SELECT employee_role.id, title AS "Job Designation", department_name AS Department, salary As Salary FROM employee_role INNER JOIN department ON employee_role.department_id = department.id`, 
+        connection.query(`SELECT employee_role.id, title AS "Job Designation", department_name AS Department, salary As Salary FROM employee_role INNER JOIN department ON employee_role.department_id = department.id`, 
             function (err, res) {
                 if (err) throw err;
                 console.log('\n _______All Roles_______\n');
@@ -105,12 +103,8 @@ const initiateApp = () => {
 
     //To display ALL Employees
     displayEmployees = () => {
-        const query = connection.query( 
-            `SELECT employee.id, employee.first_name AS "First Name", employee.last_name AS "Last Name", title AS "Job Designation", department_name AS Department, salary AS Salary, FROM employee`,
-            // INNER JOIN employee_role
-            //     ON employee_role_id = employee_role.id
-            // LEFT JOIN employee manager
-            //     ON manager.id = employee.manager_id
+        const query = "SELECT employee.id, employee.first_name AS 'First Name', employee.last_name AS 'Last Name', employee_role.title AS 'Job Designation', employee_role.salary AS Salary, department.department_name FROM department INNER JOIN employee_role ON employee_role.department_id = department.id INNER JOIN employee ON employee.id = employee_role.id"
+       connection.query(query,
             function (err, res){
                 if (err) throw err;
                 console.log('\n _______All Employees_______\n');
