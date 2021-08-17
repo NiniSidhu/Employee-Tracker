@@ -20,10 +20,10 @@ VALUES
 
 INSERT INTO employee (first_name, last_name, employee_role_id, manager_id)
 VALUES 
-    ('Jaswinder', 'Deol', 1, NULL),
+    ('Jaswinder', 'Deol', 1, 1),
     ('Mintu', 'Batra', 2, 1),
-    ('Amrinder', 'Randhawa', 3, NULL),
-    ('Kulwinder', 'Billa', 4, NULL),
-    ('Manpreet', 'Sidhu', 5, NULL),
-    ('Surinder', 'Pannu', 6, NULL),
-    ('Talwinder', 'Aulakh', 7, NULL);
+    ('Amrinder', 'Randhawa', 3, 1),
+    ('Kulwinder', 'Billa', 4, 1),
+    ('Manpreet', 'Sidhu', 5, 1),
+    ('Surinder', 'Pannu', 6, 1),
+    ('Talwinder', 'Aulakh', 7, 1);

@@ -6,7 +6,7 @@ const mysql = require('mysql2');
 const inquirer = require('inquirer');
 const consoleTable = require('console.table');
 
-const PORT = process.env.PORT || 3002; 
+const PORT = process.env.PORT || 2002; 
 const app = express(); 
 
 app.use(express.urlencoded({ extended: false }));
@@ -41,7 +41,7 @@ const initiateApp = () => {
                     'Add a Role',
                     'Add an Employee',
                     'Update an Employee Role',
-                    'Finished',
+                    'Quit',
                 ],
             }
         ])
@@ -68,7 +68,7 @@ const initiateApp = () => {
                 if (answers.menu === 'Update an Employee'){
                     addEmployee(); 
                 }
-                if (answers.menu === 'Finished'){
+                if (answers.menu === 'Quit'){
                     console.log('Thank you for using Employee Tracker...')
                     return false;  
                 }
@@ -102,9 +102,17 @@ const initiateApp = () => {
         );
     };
 
+    // "SELECT employee.id, employee.first_name AS 'First Name', employee.last_name AS 'Last Name', employee_role.title AS 'Job Designation', employee_role.salary AS Salary, department.department_name FROM department INNER JOIN employee_role ON employee_role.department_id = department.id INNER JOIN employee ON employee.id = employee_role.id INNER JOIN employee manager on manager.id = employee.manager_id"
+
     //To display ALL Employees
     displayEmployees = () => {
-        const query = "SELECT employee.id, employee.first_name AS 'First Name', employee.last_name AS 'Last Name', employee_role.title AS 'Job Designation', employee_role.salary AS Salary, department.department_name FROM department INNER JOIN employee_role ON employee_role.department_id = department.id INNER JOIN employee ON employee.id = employee_role.id INNER JOIN employee manager on manager.id = employee.manager_id"
+        const query = `SELECT employee.id, employee.first_name AS "First Name", employee.last_name AS "Last Name", employee_role.title AS "Job Designation", employee_role.salary AS Salary FROM employee
+        INNER JOIN employee_role
+            ON employee.id = employee_role.id
+        INNER JOIN department
+            ON employee_role.department_id = department.id 
+        LEFT JOIN employee manager
+            ON manager.id = employee.manager_id`
        connection.query(query,
             function (err, res){
                 if (err) throw err;
