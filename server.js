@@ -41,6 +41,7 @@ const initiateApp = () => {
                     'Add a Role',
                     'Add an Employee',
                     'Update an Employee Role',
+                    'Finished',
                 ],
             }
         ])
@@ -239,7 +240,7 @@ const initiateApp = () => {
                 for (let i=0; i<res.length; i++){
                     const roles = res[i];
                     choicesRoles.push({
-                        name: roles.roles, 
+                        name: roles.Role, 
                         value: roles.value
                     });
                 }
@@ -269,7 +270,7 @@ const initiateApp = () => {
         return inquirer.prompt([
             {
                 type: 'input',
-                name: 'title',
+                name: 'first_name',
                 message: 'What is the first name of the employee? ',
                 validate: checkInput => {
                     if (checkInput){
@@ -283,7 +284,7 @@ const initiateApp = () => {
             },
             {
                 type: 'input',
-                name: 'title',
+                name: 'last_name',
                 message: 'What is the last name of the employee? ',
                 validate: checkInput => {
                     if (checkInput){
@@ -299,7 +300,7 @@ const initiateApp = () => {
                 type: 'list',
                 name: 'employee_role_id',
                 message: 'What is the role assigned to this new Employee?',
-                choices: choicesRoles
+                choices: choicesRoles,
             },
             {
                 type: 'list',
@@ -336,7 +337,7 @@ const initiateApp = () => {
                 for (let i=0; e<res.length; i++){
                     const roles = res[i];
                     choicesRoles.push({
-                        name: roles.roles, 
+                        name: roles.Role, 
                         value: roles.value
                     });
                 }
@@ -367,13 +368,13 @@ const initiateApp = () => {
                 type: 'list', 
                 name: 'id', 
                 message: 'Select an Employee to modify Role',
-                choices: choicesEmployee
+                choices: choicesEmployee,
             },
             {
                 type: 'list',
                 name: 'employee_role_id',
                 message: 'What is the New Role that is being assigned to this employee?',
-                choices: choicesRoles
+                choices: choicesRoles,
             }
         ])
 
